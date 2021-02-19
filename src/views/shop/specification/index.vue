@@ -13,18 +13,7 @@
     </el-form>
     <el-table stripe v-loading="loading" :data="tableData" row-key="id" default-expand-all border style="width: 100%; margin-bottom: 20px;">
       <el-table-column prop="name" label="名称" width="400"></el-table-column>
-      <el-table-column label="是否可用" width="200">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <template v-if="scope.row.enabled">
-              <el-tag size="mini">启用</el-tag>
-            </template>
-            <template v-else>
-              <el-tag type="danger" size="mini">禁用</el-tag>
-            </template>
-          </div>
-        </template>
-      </el-table-column>
+      <el-table-column prop="sortOrder" label="排序" width="100"></el-table-column>
       <el-table-column label="操作" align="center" :width="!$route.meta.manage ? '200' : '260'">
         <template slot-scope="scope">
           <el-button @click="updateOne(scope.row)" type="primary" size="mini">{{ $route.meta.manage ? '编辑' : '详情' }}</el-button>
@@ -54,11 +43,11 @@
       :before-close="handleCancel"
     >
       <el-form ref="form" :model="form" :disabled="!$route.meta.manage" :rules="formRules" label-width="110px">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" maxlength="64"></el-input>
+        <el-form-item label="规格名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入规格名称" maxlength="64"></el-input>
         </el-form-item>
-        <el-form-item label="是否启用">
-          <el-switch v-model="form.enabled"></el-switch>
+        <el-form-item label="排序" prop="name">
+          <el-input v-model="form.sortOrder" placeholder="请输入规格名称" maxlength="64"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -71,16 +60,16 @@
 <script>
 import { mapState } from 'vuex';
 import { getStyle } from '@/utils/common';
-import { getList, insert, updateById, deleteById } from '@/api/attributeCategory';
+import { getList, insert, updateById, deleteById } from '@/api/specification';
 
 const defaultProps = {
   id: null,
   name: '',
-  enabled: null,
+  sortOrder: null,
 };
 
 export default {
-  name: 'AttributeCategory',
+  name: 'Specification',
   data(props) {
     return {
       loading: false,
@@ -93,7 +82,7 @@ export default {
       tableData: [],
       total: 0,
       formRules: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入规格名称', trigger: 'blur' }],
       },
     };
   },

@@ -80,6 +80,13 @@ export const asyncRoutes = [
         component: () => import('@/views/shop/attributecategory/index'),
         meta: { title: '商品属性种类', manage: true },
       },
+      {
+        path: 'specification',
+        name: 'specification',
+        uri: '/shopSet/specification',
+        component: () => import('@/views/shop/specification/index'),
+        meta: { title: '商品规格', manage: true },
+      },
     ],
   },
   { path: '/', meta: { hideInMenu: true } },
