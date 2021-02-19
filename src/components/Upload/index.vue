@@ -55,14 +55,14 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   line-height: 150px;
   text-align: center;
 }
 .avatar {
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   display: block;
   object-fit: contain;
 }
