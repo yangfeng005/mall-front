@@ -95,7 +95,7 @@
           <el-input v-model="form.simpleDesc" maxlength="50"></el-input>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="form.sortOrder" maxlength="50"></el-input>
+          <el-input-number v-model="form.sortOrder" :min="1" controls-position="right"></el-input-number>
         </el-form-item>
         <el-form-item label="是否显示">
           <el-radio-group v-model="form.isShow">

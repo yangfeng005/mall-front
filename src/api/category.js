@@ -8,40 +8,18 @@ export function getList(data) {
   });
 }
 
-//根据id获取
-export function getById(data, id) {
+export function saveOrUpd(data) {
   return request({
-    url: '/category/' + id,
-    method: 'GET',
-    data: data,
+    url: '/category/save',
+    method: 'post',
+    data,
   });
 }
 
-//插入
-export function insert(data) {
+export function removeOne(params) {
   return request({
-    url: '/category',
-    method: 'POST',
-    data: data,
-  });
-}
-
-//更新数据状态
-export function updateById(data) {
-  return request({
-    url: '/category/',
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: data,
-  });
-}
-
-//删除
-export function deleteById(id) {
-  return request({
-    url: '/category/' + id,
-    method: 'DELETE',
+    url: '/category/delete',
+    method: 'get',
+    params,
   });
 }
