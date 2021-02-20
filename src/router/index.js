@@ -103,6 +103,36 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: '/editGoods',
+    name: 'editGoods',
+    uri: '/editGoods',
+    component: Layout,
+    meta: { title: '编辑商品', icon: 'el-icon-edit-outline' },
+    children: [
+      {
+        path: 'goods',
+        name: 'goods',
+        uri: '/editGoods/goods',
+        component: () => import('@/views/shop/goods/index'),
+        meta: { title: '所有商品', manage: true },
+      },
+      /* {
+        path: 'goodsSpecification',
+        name: 'goodsSpecification',
+        uri: '/editGoods/goodsSpecification',
+        component: () => import('@/views/shop/goodsSpecification/index'),
+        meta: { title: '商品规格', manage: true },
+      },
+      {
+        path: 'product',
+        name: 'product',
+        uri: '/editGoods/product',
+        component: () => import('@/views/shop/product/index'),
+        meta: { title: '商品类型', manage: true },
+      },*/
+    ],
+  },
   { path: '/', meta: { hideInMenu: true } },
   { path: '*', redirect: '/404', meta: { hideInMenu: true } },
 ];
