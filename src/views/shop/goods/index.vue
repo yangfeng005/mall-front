@@ -65,7 +65,7 @@
     ></el-pagination>
     <el-dialog
       top="5vh"
-      width="40%"
+      width="50%"
       :max-height="tableH"
       :height="tableH"
       :close-on-click-modal="false"
@@ -73,29 +73,81 @@
       :visible.sync="dialogVisible"
       :before-close="handleCancel"
     >
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-        <el-tab-pane label="通用信息" name="general">
-          <el-form ref="form" :model="form" :disabled="!$route.meta.manage" :rules="formRules" label-width="110px">
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入名称" maxlength="64"></el-input>
+      <el-form ref="form" :model="form" :disabled="!$route.meta.manage" :rules="formRules" label-width="110px">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tab-pane label="通用信息" name="general">
+            <el-form-item label="商品类型">
+              <el-input v-model="form.categoryId" maxlength="64"></el-input>
             </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="详细描述" name="detail">
-          <el-form ref="form" :model="form" :disabled="!$route.meta.manage" :rules="formRules" label-width="110px">
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入名称" maxlength="64"></el-input>
+            <el-form-item label="商品序列号">
+              <el-input v-model="form.goodsSn" maxlength="64"></el-input>
             </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="其他信息" name="otherInfo">
-          <el-form ref="form" :model="form" :disabled="!$route.meta.manage" :rules="formRules" label-width="110px">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入名称" maxlength="64"></el-input>
+              <el-input v-model="form.name" maxlength="64"></el-input>
             </el-form-item>
-          </el-form>
-        </el-tab-pane>
-      </el-tabs>
+            <el-form-item label="品牌">
+              <el-select v-model="form.brandId">
+                <el-option v-for="(item, index) in brandList" :key="index" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="类别">
+              <el-select v-model="form.attributeCategory">
+                <el-option v-for="(item, index) in attributeCategoryList" :key="index" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="商品库存">
+              <el-input-number v-model="form.goodsNumber" :min="1" controls-position="right"></el-input-number>
+            </el-form-item>
+            <el-form-item label="零售价格">
+              <el-input v-model="form.retailPrice" maxlength="64"></el-input>
+            </el-form-item>
+            <el-form-item label="市场价">
+              <el-input v-model="form.marketPrice" maxlength="64"></el-input>
+            </el-form-item>
+            <el-form-item label="商品主图">
+              <upload-img :avatarUrl="form.primaryPicUrl" @changeUrl="(url) => (form.primaryPicUrl = url)" />
+            </el-form-item>
+            <el-form-item label="商品列表图">
+              <upload-img :avatarUrl="form.listPicUrl" @changeUrl="(url) => (form.listPicUrl = url)" />
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="详细描述" name="detail">
+            <w-editor v-if="dialogVisible" :value="form.goodsDesc" @onChange="(v) => (form.goodsDesc = v)"></w-editor>
+          </el-tab-pane>
+          <el-tab-pane label="其他信息" name="otherInfo">
+            <el-form-item label="排序">
+              <el-input-number v-model="form.sortOrder" :min="1" controls-position="right"></el-input-number>
+            </el-form-item>
+            <el-form-item label="上架">
+              <el-radio-group v-model="form.isOnSale">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="是否新商品">
+              <el-radio-group v-model="form.isNew">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="热销">
+              <el-radio-group v-model="form.isHot">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="推广描述">
+              <el-input v-model="form.promotionDesc" maxlength="64"></el-input>
+            </el-form-item>
+            <el-form-item label="关键字">
+              <el-input v-model="form.keywords" maxlength="64"></el-input>
+            </el-form-item>
+            <el-form-item label="简明介绍">
+              <el-input v-model="form.promotionTag" maxlength="64"></el-input>
+            </el-form-item>
+          </el-tab-pane>
+        </el-tabs>
+      </el-form>
       <div slot="footer">
         <el-button @click="handleCancel">取 消</el-button>
         <el-button :loading="saving" type="primary" v-if="$route.meta.manage" @click="handleSave">确 定</el-button>
@@ -107,6 +159,8 @@
 import { mapState } from 'vuex';
 import { getStyle } from '@/utils/common';
 import { deleteById, getList, insert, updateById } from '@/api/goods';
+import UploadImg from '@/components/Upload';
+import WEditor from '@/components/WEditor';
 
 const defaultProps = {
   id: null,
@@ -115,6 +169,7 @@ const defaultProps = {
   goodsSn: '',
   brandId: '',
   goodsNumber: null,
+  goodsDesc: null,
   keywords: '',
   goodsBrief: '',
   isOnSale: null,
@@ -141,8 +196,11 @@ const defaultProps = {
 
 export default {
   name: 'Goods',
+  components: { UploadImg, WEditor },
   data(props) {
     return {
+      attributeCategoryList: [],
+      brandList: [],
       loading: false,
       saving: false,
       pageParams: {
