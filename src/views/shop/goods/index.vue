@@ -73,11 +73,41 @@
       :visible.sync="dialogVisible"
       :before-close="handleCancel"
     >
+      <el-dialog width="35%" title="选择分类" :visible.sync="innerVisible" append-to-body>
+        <el-form :inline="true" class="form-class form-input" label-width="70px" size="mini">
+          <el-form-item label="关键字：" label-width="110px">
+            <el-input placeholder="输入关键字过滤" v-model="filterText" style="width: 150px;"> </el-input>
+          </el-form-item>
+        </el-form>
+        <el-card class="box-card">
+          <div class="text item">
+            <ul class="infinite-list" style="height: 300px; overflow: auto;">
+              <el-tree
+                :data="categoryTreeData"
+                node-key="id"
+                default-expand-all
+                ref="categoryTree"
+                :filter-node-method="filterNode"
+                :props="defaultProps"
+              >
+              </el-tree>
+            </ul>
+          </div>
+        </el-card>
+        <div slot="footer" class="dialog-footer">
+          <el-button size="mini" type="primary" @click="submitCategory" :loading="saving" icon="el-icon-check">确定 </el-button>
+          <el-button size="mini" type="info" @click="clearCategory" :loading="saving" icon="el-icon-document-delete">清除 </el-button>
+          <el-button size="mini" @click="innerVisible = false" icon="el-icon-close">关闭</el-button>
+        </div>
+      </el-dialog>
       <el-form ref="form" :model="form" :disabled="!$route.meta.manage" :rules="formRules" label-width="110px">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane label="通用信息" name="general">
             <el-form-item label="商品类型">
-              <el-input v-model="form.categoryId" maxlength="64"></el-input>
+              <el-input v-model="form.categoryName" autocomplete="off" @focus="searchTreeSource" suffix-icon="el-icon-search"></el-input>
+            </el-form-item>
+            <el-form-item style="display: none;">
+              <el-input v-model="form.categoryId" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="商品序列号">
               <el-input v-model="form.goodsSn" maxlength="64"></el-input>
@@ -159,6 +189,9 @@
 import { mapState } from 'vuex';
 import { getStyle } from '@/utils/common';
 import { deleteById, getList, insert, updateById } from '@/api/goods';
+import { getBrandAllList } from '@/api/brand';
+import { getAttributeCategoryList } from '@/api/attributeCategory';
+import { getList as getCategoryList } from '@/api/category';
 import UploadImg from '@/components/Upload';
 import WEditor from '@/components/WEditor';
 
@@ -192,6 +225,7 @@ const defaultProps = {
   isLimited: null,
   isHot: null,
   marketPrice: null,
+  categoryName: '',
 };
 
 export default {
@@ -199,6 +233,13 @@ export default {
   components: { UploadImg, WEditor },
   data(props) {
     return {
+      categoryTreeData: null,
+      filterText: '',
+      defaultProps: {
+        children: 'children',
+        label: 'name',
+      },
+      innerVisible: false,
       attributeCategoryList: [],
       brandList: [],
       loading: false,
@@ -228,7 +269,40 @@ export default {
       return null;
     },
   },
+  watch: {
+    filterText(val) {
+      this.$refs.categoryTree.filter(val);
+    },
+  },
   methods: {
+    //过滤树形数据
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1 || data.code.indexOf(value) !== -1;
+    },
+    //查找树数据源
+    searchTreeSource() {
+      getCategoryList().then((res) => {
+        this.categoryTreeData = res.data;
+      });
+      this.filterText = '';
+      this.innerVisible = true;
+    },
+    //选择商品分类
+    submitCategory() {
+      let category = this.$refs.categoryTree.getCurrentNode();
+      if (category) {
+        this.form.categoryName = category.name;
+        this.form.categoryId = category.id;
+        this.innerVisible = false;
+      }
+    },
+    //清除选择的商品分类
+    clearCategory() {
+      this.form.categoryName = '';
+      this.form.categoryId = '';
+      this.innerVisible = false;
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
@@ -317,6 +391,12 @@ export default {
   },
   mounted() {
     this.loadData();
+    getBrandAllList().then((res) => {
+      this.brandList = res.data;
+    });
+    getAttributeCategoryList().then((res) => {
+      this.attributeCategoryList = res.data;
+    });
   },
 };
 </script>

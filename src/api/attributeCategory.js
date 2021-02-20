@@ -45,3 +45,10 @@ export function deleteById(id) {
     method: 'DELETE',
   });
 }
+
+export function getAttributeCategoryList() {
+  return request({
+    url: '/attributeCategory/listAll',
+    method: 'post',
+  });
+}

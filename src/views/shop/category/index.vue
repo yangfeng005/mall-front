@@ -130,8 +130,6 @@ export default {
       loading: false,
       saving: false,
       pageParams: {
-        // pageNo: 1,
-        // pageSize: 10,
         name: '',
         code: '',
       },
