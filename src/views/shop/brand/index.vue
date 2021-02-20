@@ -58,7 +58,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" :width="!$route.meta.manage ? '200' : '360'">
+      <el-table-column label="操作" align="center" :width="!$route.meta.manage ? '150' : '150'">
         <template slot-scope="scope">
           <el-button @click="updateOne(scope.row)" type="primary" size="mini">{{ $route.meta.manage ? '编辑' : '详情' }}</el-button>
           <el-popconfirm v-if="$route.meta.manage" title="确定删除吗？" @confirm="removeOne(scope.row.id)">
