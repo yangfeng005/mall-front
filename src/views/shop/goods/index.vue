@@ -65,7 +65,7 @@
     ></el-pagination>
     <el-dialog
       top="5vh"
-      width="50%"
+      width="55%"
       :max-height="tableH"
       :height="tableH"
       :close-on-click-modal="false"
