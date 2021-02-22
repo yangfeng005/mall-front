@@ -13,11 +13,11 @@
     </el-form>
     <el-table stripe v-loading="loading" :data="tableData" row-key="id" default-expand-all border style="width: 100%; margin-bottom: 20px;">
       <el-table-column prop="productName" label="商品名称" show-overflow-tooltip width="200"></el-table-column>
-      <el-table-column prop="goodsSpecificationIds" label="商品规格" show-overflow-tooltip width="150"></el-table-column>
-      <el-table-column prop="goodsSn" label="商品序列号" show-overflow-tooltip width="140"></el-table-column>
-      <el-table-column prop="goodsNumber" label="商品库存" show-overflow-tooltip width="120"></el-table-column>
-      <el-table-column prop="retailPrice" label="零售价格(元)" width="80"></el-table-column>
-      <el-table-column prop="marketPrice" label="市场价格(元)" width="80"></el-table-column>
+      <el-table-column prop="goodsSpecificationName" label="商品规格" show-overflow-tooltip width="200"></el-table-column>
+      <el-table-column prop="goodsSn" label="商品序列号" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="goodsNumber" label="商品库存" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="retailPrice" label="零售价格(元)" width="100"></el-table-column>
+      <el-table-column prop="marketPrice" label="市场价格(元)" width="100"></el-table-column>
       <el-table-column label="操作" align="center" :width="!$route.meta.manage ? '150' : '150'">
         <template slot-scope="scope">
           <el-button @click="updateOne(scope.row)" type="primary" size="mini">{{ $route.meta.manage ? '编辑' : '详情' }}</el-button>
@@ -57,9 +57,9 @@
             <el-checkbox v-for="item in specificationList" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-row v-for="(element, key) in form.specificationMap" :key="key">
+        <el-row v-for="(element, key) in goodsSpecificationMap" :key="key">
           <el-form-item :label="key">
-            <el-select> <el-option v-for="data in element" :key="data.id" :label="data.value" :value="data.value"></el-option></el-select>
+            <el-select> <el-option v-for="data in element" :key="data.id" :label="data.value" :value="data.id"></el-option></el-select>
           </el-form-item>
         </el-row>
         <el-form-item label="商品序列号">
@@ -99,15 +99,18 @@ const defaultProps = {
   goodsSpecificationIds: '',
   goodsSpecificationIdList: [],
   productName: '',
-  specificationMap: new Map(),
+  specificationMap: null,
+  goodsSpecificationName: '',
 };
 
 export default {
   name: 'Product',
   data(props) {
     return {
+      specificationMapTemp: null,
       innerVisible: false,
       goodsList: [],
+      goodsSpecificationMap: null,
       specificationList: [],
       loading: false,
       saving: false,
@@ -137,14 +140,13 @@ export default {
   },
   methods: {
     showSpecification(val) {
+      this.goodsSpecificationMap = new Map();
       if (this.form.specificationMap) {
-        for (var key in this.form.specificationMap) {
-          let tmp = val.filter((item) => item == key);
-          if (!tmp || tmp.length == 0) {
-            delete this.form.specificationMap[key];
-          }
+        for (var key of val) {
+          this.goodsSpecificationMap.set(key, this.form.specificationMap[key]);
         }
       }
+      console.log(this.goodsSpecificationMap)
     },
     handleClick(tab, event) {
       console.log(tab, event);
