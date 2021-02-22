@@ -124,13 +124,13 @@ export const asyncRoutes = [
         component: () => import('@/views/shop/goodsSpecification/index'),
         meta: { title: '商品规格', manage: true },
       },
-      /* {
+      {
         path: 'product',
         name: 'product',
         uri: '/editGoods/product',
         component: () => import('@/views/shop/product/index'),
-        meta: { title: '商品类型', manage: true },
-      },*/
+        meta: { title: '产品设置', manage: true },
+      },
     ],
   },
   { path: '/', meta: { hideInMenu: true } },
