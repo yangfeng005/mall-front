@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-form :inline="true" :model="pageParams">
-      <el-form-item label="名称">
-        <el-input clearable v-model="pageParams.name" placeholder="请输入名称"></el-input>
+      <el-form-item label="商品名称">
+        <el-input clearable v-model="pageParams.productName" placeholder="请输入名称"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSearch">查询</el-button>
@@ -54,14 +54,12 @@
         </el-form-item>
         <el-form-item label="商品规格">
           <el-checkbox-group v-model="form.goodsSpecificationIdList" @change="showSpecification">
-            <el-checkbox v-for="(item, index) in specificationList" :key="index" :label="item.name">{{ item.name }}</el-checkbox>
+            <el-checkbox v-for="item in specificationList" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-row v-for="(element, key) in form.specificationMap" :key="key">
           <el-form-item :label="key">
-            <el-select class="paddingcss long_select_">
-              <el-option v-for="data in element" :key="index" :label="data.value" :value="data.value"></el-option
-            ></el-select>
+            <el-select> <el-option v-for="data in element" :key="data.id" :label="data.value" :value="data.value"></el-option></el-select>
           </el-form-item>
         </el-row>
         <el-form-item label="商品序列号">
@@ -101,7 +99,7 @@ const defaultProps = {
   goodsSpecificationIds: '',
   goodsSpecificationIdList: [],
   productName: '',
-  specificationMap: null,
+  specificationMap: new Map(),
 };
 
 export default {
@@ -114,7 +112,7 @@ export default {
       loading: false,
       saving: false,
       pageParams: {
-        name: '',
+        productName: '',
       },
       form: props._.cloneDeep(defaultProps),
       dialogVisible: false,
@@ -138,7 +136,16 @@ export default {
     },
   },
   methods: {
-    showSpecification(val) {},
+    showSpecification(val) {
+      if (this.form.specificationMap) {
+        for (var key in this.form.specificationMap) {
+          let tmp = val.filter((item) => item == key);
+          if (!tmp || tmp.length == 0) {
+            delete this.form.specificationMap[key];
+          }
+        }
+      }
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
