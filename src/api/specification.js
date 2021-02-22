@@ -45,3 +45,10 @@ export function deleteById(id) {
     method: 'DELETE',
   });
 }
+
+export function getAllSpecificationList() {
+  return request({
+    url: '/specification/listAll',
+    method: 'post',
+  });
+}

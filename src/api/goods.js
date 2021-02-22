@@ -45,3 +45,10 @@ export function deleteById(id) {
     method: 'DELETE',
   });
 }
+
+export function getAllGoodsList() {
+  return request({
+    url: '/goods/listAll',
+    method: 'post',
+  });
+}

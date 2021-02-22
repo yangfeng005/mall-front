@@ -82,6 +82,8 @@
 </template>
 <script>
 import { deleteById, getList, insert, updateById } from '@/api/goodsSpecification';
+import { getAllSpecificationList } from '@/api/specification';
+import { getAllGoodsList } from '@/api/goods';
 import UploadImg from '@/components/Upload';
 
 import { mapState } from 'vuex';
@@ -222,6 +224,12 @@ export default {
   },
   mounted() {
     this.loadData();
+    getAllSpecificationList().then((res) => {
+      this.specificationList = res.data;
+    });
+    getAllGoodsList().then((res) => {
+      this.goodsList = res.data;
+    });
   },
 };
 </script>
