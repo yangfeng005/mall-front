@@ -140,13 +140,21 @@ export default {
   },
   methods: {
     showSpecification(val) {
-      this.goodsSpecificationMap = new Map();
+      this.goodsSpecificationMap = new Object();
       if (this.form.specificationMap) {
         for (var key of val) {
-          this.goodsSpecificationMap.set(key, this.form.specificationMap[key]);
+          var showKey = '';
+          if (this.specificationList) {
+            var specification = this.specificationList.filter((item) => item.id == key);
+            if (specification && specification.length > 0) {
+              showKey = specification[0].name;
+            }
+          }
+          if(showKey){
+            this.goodsSpecificationMap[showKey] = this.form.specificationMap[key];
+          }
         }
       }
-      console.log(this.goodsSpecificationMap)
     },
     handleClick(tab, event) {
       console.log(tab, event);
