@@ -169,6 +169,7 @@ export default {
       getAllGoodsList().then((res) => {
         this.goodsList = res.data;
       });
+      this.goodsSpecificationMap = new Object();
       this.dialogVisible = true;
     },
     handleSearch() {
@@ -231,6 +232,7 @@ export default {
         this.goodsList = res.data;
       });
       this.form = this._.pick(row, Object.keys(defaultProps));
+      this.goodsSpecificationMap = new Object();
       this.dialogVisible = true;
       this.$nextTick(() => {
         this.$refs.form.clearValidate();
