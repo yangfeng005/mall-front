@@ -231,7 +231,15 @@ export default {
         if (!valid) return;
 
         this.saving = true;
-
+        if (this.goodsSpecificationSelected) {
+          var goodsSpecificationIds = [];
+          for (var key in this.goodsSpecificationSelected) {
+            goodsSpecificationIds.push(this.goodsSpecificationSelected[key]);
+          }
+          if (goodsSpecificationIds && goodsSpecificationIds.length > 0) {
+            this.form.goodsSpecificationIds = goodsSpecificationIds.join('_');
+          }
+        }
         if (this.form && this.form.id) {
           updateById(JSON.stringify(this.form))
             .then(() => {
@@ -244,6 +252,7 @@ export default {
             })
             .finally(() => (this.saving = false));
         } else {
+          debugger;
           insert({
             ...this.form,
           })
