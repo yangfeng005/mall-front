@@ -48,7 +48,7 @@
     >
       <el-form ref="form" :model="form" :disabled="!$route.meta.manage" :rules="formRules" label-width="110px">
         <el-form-item label="商品">
-          <el-select v-model="form.goodsId">
+          <el-select v-model="form.goodsId" @change="changeGoods" :disabled="!!form.id">
             <el-option v-for="(item, index) in goodsList" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -140,6 +140,15 @@ export default {
     },
   },
   methods: {
+    changeGoods(val) {
+      let data = {
+        goodsId: val,
+      };
+      listGoodsSpecification(data).then((res) => {
+        this.specificationMap = res.data;
+        this.showSpecification(this.form.goodsSpecificationIdList);
+      });
+    },
     showSpecification(val) {
       if (!this.form.goodsId) {
         this.$notify.error({
@@ -147,6 +156,9 @@ export default {
           message: '请先选择商品',
         });
         return false;
+      }
+      if (!val || val.length == 0) {
+        return;
       }
       this.goodsSpecificationMap = new Object();
       if (this.specificationMap) {
@@ -234,7 +246,7 @@ export default {
       };
       listGoodsSpecification(data).then((res) => {
         this.specificationMap = res.data;
-        this.showSpecification(this.form.goodsSpecificationIdList)
+        this.showSpecification(this.form.goodsSpecificationIdList);
       });
       this.dialogVisible = true;
       this.$nextTick(() => {

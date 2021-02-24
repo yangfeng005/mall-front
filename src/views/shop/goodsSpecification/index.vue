@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-form :inline="true" :model="pageParams">
-      <el-form-item label="名称">
-        <el-input clearable v-model="pageParams.name" placeholder="名称"></el-input>
+      <el-form-item label="商品名称">
+        <el-input clearable v-model="pageParams.productName" placeholder="名称"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSearch">查询</el-button>
@@ -108,7 +108,7 @@ export default {
       pageParams: {
         pageNo: 1,
         pageSize: 10,
-        name: '',
+        productName: '',
       },
       form: props._.cloneDeep(defaultProps),
       dialogVisible: false,
