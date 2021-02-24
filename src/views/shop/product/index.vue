@@ -146,6 +146,11 @@ export default {
       this.$forceUpdate();
     },
     changeGoods(val) {
+      this.form.goodsSpecificationIdList = [];
+      this.form.goodsSn = '';
+      this.form.goodsNumber = null;
+      this.form.retailPrice = null;
+      this.form.marketPrice = null;
       this.goodsSpecificationSelected = {};
       this.specificationMap = {};
       this.goodsSpecificationMap = {};
