@@ -9,11 +9,10 @@ export function getList(data) {
 }
 
 //根据id获取
-export function getById(data, id) {
+export function getById(id) {
   return request({
     url: '/goods/' + id,
     method: 'GET',
-    data: data,
   });
 }
 

@@ -89,7 +89,7 @@ import { mapState } from 'vuex';
 import { getStyle } from '@/utils/common';
 import { deleteById, getList, insert, updateById } from '@/api/product';
 import { getAllSpecificationList } from '@/api/specification';
-import { getAllGoodsList } from '@/api/goods';
+import { getAllGoodsList, getById as getGoodsById } from '@/api/goods';
 import { listGoodsSpecification } from '@/api/goodsSpecification';
 
 const defaultProps = {
@@ -114,7 +114,6 @@ export default {
       innerVisible: false,
       goodsList: [],
       goodsSpecificationMap: null,
-      originSpecificationMap: {},
       specificationList: [],
       loading: false,
       saving: false,
@@ -144,15 +143,24 @@ export default {
   },
   methods: {
     changeSelectd() {
-      console.log(this.goodsSpecificationSelected)
       this.$forceUpdate();
     },
     changeGoods(val) {
+      this.goodsSpecificationSelected = {};
+      this.specificationMap = {};
+      this.goodsSpecificationMap = {};
       let data = {
         goodsId: val,
       };
       listGoodsSpecification(data).then((res) => {
         this.specificationMap = res.data;
+      });
+      getGoodsById(val).then((res) => {
+        var goods = res.data;
+        this.form.goodsSn = goods.goodsSn;
+        this.form.goodsNumber = goods.goodsNumber;
+        this.form.retailPrice = goods.retailPrice;
+        this.form.marketPrice = goods.marketPrice;
       });
     },
     showSpecification(val) {
@@ -164,7 +172,6 @@ export default {
         return false;
       }
       this.goodsSpecificationMap = {};
-      this.goodsSpecificationSelected = {};
       if (!val || val.length == 0) {
         return;
       }
@@ -176,9 +183,6 @@ export default {
             if (specification && specification.length > 0) {
               showKey = specification[0].name + '_' + key;
             }
-          }
-          if (this.originSpecificationMap && this.originSpecificationMap[key]) {
-            this.goodsSpecificationSelected[key] = this.originSpecificationMap[key];
           }
           if (showKey) {
             this.goodsSpecificationMap[showKey] = this.specificationMap[key];
@@ -193,9 +197,8 @@ export default {
       if (row) {
         this.form.name = row.name;
       }
-      this.originSpecificationMap = {};
       this.goodsSpecificationSelected = {};
-      this.specificationMap = {}
+      this.specificationMap = {};
       this.goodsSpecificationMap = {};
       this.dialogVisible = true;
     },
@@ -253,11 +256,11 @@ export default {
     },
     updateOne(row) {
       this.form = this._.pick(row, Object.keys(defaultProps));
-      this.originSpecificationMap = {};
+      this.goodsSpecificationSelected = {};
       var goodsSpecificationIdArr = this.form.goodsSpecificationIds.split('_');
       if (this.form.goodsSpecificationIdList && goodsSpecificationIdArr) {
         for (var i = 0; i < this.form.goodsSpecificationIdList.length; i++) {
-          this.originSpecificationMap[this.form.goodsSpecificationIdList[i]] = goodsSpecificationIdArr[i];
+          this.goodsSpecificationSelected[this.form.goodsSpecificationIdList[i]] = goodsSpecificationIdArr[i];
         }
       }
       this.goodsSpecificationMap = new Object();
