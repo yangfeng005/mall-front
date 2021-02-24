@@ -58,8 +58,10 @@
           </el-checkbox-group>
         </el-form-item>
         <el-row v-for="(element, key) in goodsSpecificationMap" :key="key">
-          <el-form-item :label="key">
-            <el-select> <el-option v-for="data in element" :key="data.id" :label="data.value" :value="data.id"></el-option></el-select>
+          <el-form-item :label="key.split('_')[0]">
+            <el-select v-model="goodsSpecificationSelected[key.split('_')[1]]">
+              <el-option v-for="data in element" :key="data.id" :label="data.value" :value="data.id"></el-option>
+            </el-select>
           </el-form-item>
         </el-row>
         <el-form-item label="商品序列号">
@@ -108,7 +110,7 @@ export default {
   data(props) {
     return {
       specificationMap: null,
-      specificationMapTemp: null,
+      goodsSpecificationSelected: {},
       innerVisible: false,
       goodsList: [],
       goodsSpecificationMap: null,
@@ -157,6 +159,7 @@ export default {
         return false;
       }
       this.goodsSpecificationMap = new Object();
+      this.goodsSpecificationSelected = {};
       if (!val || val.length == 0) {
         return;
       }
@@ -166,9 +169,19 @@ export default {
           if (this.specificationList) {
             var specification = this.specificationList.filter((item) => item.id == key);
             if (specification && specification.length > 0) {
-              showKey = specification[0].name;
+              showKey = specification[0].name + '_' + key;
             }
           }
+          debugger
+          var index;
+          for (var i = 0; i < this.form.goodsSpecificationIdList.length; i++) {
+            if (key == this.form.goodsSpecificationIdList[i]) {
+              index = i;
+              break;
+            }
+          }
+          var goodsSpecificationId = this.form.goodsSpecificationIds.split('_')[index];
+          this.goodsSpecificationSelected[key] = goodsSpecificationId;
           if (showKey) {
             this.goodsSpecificationMap[showKey] = this.specificationMap[key];
           }
