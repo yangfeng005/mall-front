@@ -59,7 +59,7 @@
         </el-form-item>
         <el-row v-for="(element, key) in goodsSpecificationMap" :key="key">
           <el-form-item :label="key.split('_')[0]">
-            <el-select v-model="goodsSpecificationSelected[key.split('_')[1]]">
+            <el-select v-model="goodsSpecificationSelected[key.split('_')[1]]" @change="changeSelectd($event, key.split('_')[1])">
               <el-option v-for="data in element" :key="data.id" :label="data.value" :value="data.id"></el-option>
             </el-select>
           </el-form-item>
@@ -114,6 +114,7 @@ export default {
       innerVisible: false,
       goodsList: [],
       goodsSpecificationMap: null,
+      originSpecificationMap: {},
       specificationList: [],
       loading: false,
       saving: false,
@@ -142,6 +143,9 @@ export default {
     },
   },
   methods: {
+    changeSelectd(val, specificationId){
+      console.log(this.goodsSpecificationSelected)
+    },
     changeGoods(val) {
       let data = {
         goodsId: val,
@@ -172,16 +176,7 @@ export default {
               showKey = specification[0].name + '_' + key;
             }
           }
-          debugger
-          var index;
-          for (var i = 0; i < this.form.goodsSpecificationIdList.length; i++) {
-            if (key == this.form.goodsSpecificationIdList[i]) {
-              index = i;
-              break;
-            }
-          }
-          var goodsSpecificationId = this.form.goodsSpecificationIds.split('_')[index];
-          this.goodsSpecificationSelected[key] = goodsSpecificationId;
+          this.goodsSpecificationSelected[key] = this.originSpecificationMap[key];
           if (showKey) {
             this.goodsSpecificationMap[showKey] = this.specificationMap[key];
           }
@@ -252,6 +247,13 @@ export default {
     },
     updateOne(row) {
       this.form = this._.pick(row, Object.keys(defaultProps));
+      this.originSpecificationMap = {};
+      var goodsSpecificationIdArr = this.form.goodsSpecificationIds.split('_');
+      if (this.form.goodsSpecificationIdList && goodsSpecificationIdArr) {
+        for (var i = 0; i < this.form.goodsSpecificationIdList.length; i++) {
+          this.originSpecificationMap[this.form.goodsSpecificationIdList[i]] = goodsSpecificationIdArr[i];
+        }
+      }
       this.goodsSpecificationMap = new Object();
       let data = {
         goodsId: row.goodsId,
