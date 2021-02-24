@@ -144,6 +144,7 @@ export default {
   },
   methods: {
     changeSelectd() {
+      console.log(this.goodsSpecificationSelected)
       this.$forceUpdate();
     },
     changeGoods(val) {
