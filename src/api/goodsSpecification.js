@@ -45,3 +45,12 @@ export function deleteById(id) {
     method: 'DELETE',
   });
 }
+
+//根据商品id获取规格
+export function listGoodsSpecification(data) {
+  return request({
+    url: '/goodsSpecification/listGoodsSpecification',
+    method: 'POST',
+    data: data,
+  });
+}

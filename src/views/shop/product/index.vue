@@ -88,6 +88,7 @@ import { getStyle } from '@/utils/common';
 import { deleteById, getList, insert, updateById } from '@/api/product';
 import { getAllSpecificationList } from '@/api/specification';
 import { getAllGoodsList } from '@/api/goods';
+import { listGoodsSpecification } from '@/api/goodsSpecification';
 
 const defaultProps = {
   id: null,
@@ -99,7 +100,6 @@ const defaultProps = {
   goodsSpecificationIds: '',
   goodsSpecificationIdList: [],
   productName: '',
-  specificationMap: null,
   goodsSpecificationName: '',
 };
 
@@ -107,6 +107,7 @@ export default {
   name: 'Product',
   data(props) {
     return {
+      specificationMap: null,
       specificationMapTemp: null,
       innerVisible: false,
       goodsList: [],
@@ -140,8 +141,15 @@ export default {
   },
   methods: {
     showSpecification(val) {
+      if (!this.form.goodsId) {
+        this.$notify.error({
+          title: '提示',
+          message: '请先选择商品',
+        });
+        return false;
+      }
       this.goodsSpecificationMap = new Object();
-      if (this.form.specificationMap) {
+      if (this.specificationMap) {
         for (var key of val) {
           var showKey = '';
           if (this.specificationList) {
@@ -150,8 +158,8 @@ export default {
               showKey = specification[0].name;
             }
           }
-          if(showKey){
-            this.goodsSpecificationMap[showKey] = this.form.specificationMap[key];
+          if (showKey) {
+            this.goodsSpecificationMap[showKey] = this.specificationMap[key];
           }
         }
       }
@@ -163,12 +171,6 @@ export default {
       if (row) {
         this.form.name = row.name;
       }
-      getAllSpecificationList().then((res) => {
-        this.specificationList = res.data;
-      });
-      getAllGoodsList().then((res) => {
-        this.goodsList = res.data;
-      });
       this.goodsSpecificationMap = new Object();
       this.dialogVisible = true;
     },
@@ -225,14 +227,15 @@ export default {
       });
     },
     updateOne(row) {
-      getAllSpecificationList().then((res) => {
-        this.specificationList = res.data;
-      });
-      getAllGoodsList().then((res) => {
-        this.goodsList = res.data;
-      });
       this.form = this._.pick(row, Object.keys(defaultProps));
       this.goodsSpecificationMap = new Object();
+      let data = {
+        goodsId: row.goodsId,
+      };
+      listGoodsSpecification(data).then((res) => {
+        this.specificationMap = res.data;
+        this.showSpecification(this.form.goodsSpecificationIdList)
+      });
       this.dialogVisible = true;
       this.$nextTick(() => {
         this.$refs.form.clearValidate();
@@ -258,6 +261,12 @@ export default {
   },
   mounted() {
     this.loadData();
+    getAllGoodsList().then((res) => {
+      this.goodsList = res.data;
+    });
+    getAllSpecificationList().then((res) => {
+      this.specificationList = res.data;
+    });
   },
 };
 </script>
