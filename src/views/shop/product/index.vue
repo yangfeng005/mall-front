@@ -146,7 +146,6 @@ export default {
       };
       listGoodsSpecification(data).then((res) => {
         this.specificationMap = res.data;
-        this.showSpecification(this.form.goodsSpecificationIdList);
       });
     },
     showSpecification(val) {
@@ -157,10 +156,10 @@ export default {
         });
         return false;
       }
+      this.goodsSpecificationMap = new Object();
       if (!val || val.length == 0) {
         return;
       }
-      this.goodsSpecificationMap = new Object();
       if (this.specificationMap) {
         for (var key of val) {
           var showKey = '';
