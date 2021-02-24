@@ -59,7 +59,7 @@
         </el-form-item>
         <el-row v-for="(element, key) in goodsSpecificationMap" :key="key">
           <el-form-item :label="key.split('_')[0]">
-            <el-select v-model="goodsSpecificationSelected[key.split('_')[1]]" @change="changeSelectd($event, key.split('_')[1])">
+            <el-select v-model="goodsSpecificationSelected[key.split('_')[1]]" @change="changeSelectd">
               <el-option v-for="data in element" :key="data.id" :label="data.value" :value="data.id"></el-option>
             </el-select>
           </el-form-item>
@@ -143,8 +143,8 @@ export default {
     },
   },
   methods: {
-    changeSelectd(val, specificationId){
-      console.log(this.goodsSpecificationSelected)
+    changeSelectd() {
+      this.$forceUpdate();
     },
     changeGoods(val) {
       let data = {
@@ -162,7 +162,7 @@ export default {
         });
         return false;
       }
-      this.goodsSpecificationMap = new Object();
+      this.goodsSpecificationMap = {};
       this.goodsSpecificationSelected = {};
       if (!val || val.length == 0) {
         return;
@@ -176,7 +176,9 @@ export default {
               showKey = specification[0].name + '_' + key;
             }
           }
-          this.goodsSpecificationSelected[key] = this.originSpecificationMap[key];
+          if (this.originSpecificationMap && this.originSpecificationMap[key]) {
+            this.goodsSpecificationSelected[key] = this.originSpecificationMap[key];
+          }
           if (showKey) {
             this.goodsSpecificationMap[showKey] = this.specificationMap[key];
           }
@@ -190,7 +192,10 @@ export default {
       if (row) {
         this.form.name = row.name;
       }
-      this.goodsSpecificationMap = new Object();
+      this.originSpecificationMap = {};
+      this.goodsSpecificationSelected = {};
+      this.specificationMap = {}
+      this.goodsSpecificationMap = {};
       this.dialogVisible = true;
     },
     handleSearch() {
