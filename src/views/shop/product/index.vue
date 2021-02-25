@@ -180,6 +180,15 @@ export default {
       if (!val || val.length == 0) {
         return;
       }
+      //对比是否是选中的规格，没有选中的规格则从选中的map中移除
+      if (this.goodsSpecificationSelected) {
+        for (var selectKey in this.goodsSpecificationSelected) {
+          let tmp = val.filter((item) => item == selectKey);
+          if (!tmp || tmp.length == 0) {
+            delete this.goodsSpecificationSelected[selectKey];
+          }
+        }
+      }
       if (this.specificationMap) {
         for (var key of val) {
           var showKey = '';
