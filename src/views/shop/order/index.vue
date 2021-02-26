@@ -145,57 +145,57 @@
             </el-form-item>
             <el-form-item label="订单状态">
               <el-radio-group v-model="form.orderStatus">
-                <el-radio label="0">
+                <el-radio :label="0">
                   待付款
                 </el-radio>
-                <el-radio label="101">
+                <el-radio :label="101">
                   订单已取消
                 </el-radio>
-                <el-radio label="102">
+                <el-radio :label="102">
                   订单已删除
                 </el-radio>
-                <el-radio label="201">
+                <el-radio :label="201">
                   订单已付款
                 </el-radio>
-                <el-radio label="300">
+                <el-radio :label="300">
                   订单已发货
                 </el-radio>
-                <el-radio label="301">
+                <el-radio :label="301">
                   用户确认收货
                 </el-radio>
-                <el-radio label="401">
+                <el-radio :label="401">
                   退款
                 </el-radio>
-                <el-radio label="402">
+                <el-radio :label="402">
                   完成
                 </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="发货状态">
               <el-radio-group v-model="form.shippingStatus">
-                <el-radio label="0">
+                <el-radio :label="0">
                   待发货
                 </el-radio>
-                <el-radio label="1">
+                <el-radio :label="1">
                   已发货
                 </el-radio>
-                <el-radio label="2">
+                <el-radio :label="2">
                   已收货
                 </el-radio>
-                <el-radio label="4">
+                <el-radio :label="4">
                   退货
                 </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="付款状态">
               <el-radio-group v-model="form.payStatus">
-                <el-radio label="0">
+                <el-radio :label="0">
                   待付款
                 </el-radio>
-                <el-radio label="1">
+                <el-radio :label="1">
                   付款中
                 </el-radio>
-                <el-radio label="2">
+                <el-radio :label="2">
                   已付款
                 </el-radio>
               </el-radio-group>
