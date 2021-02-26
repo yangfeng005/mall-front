@@ -133,6 +133,22 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: '/order',
+    name: 'order',
+    uri: '/order',
+    component: Layout,
+    meta: { hideInMenu: true, title: '订单管理' },
+    children: [
+      {
+        path: '/',
+        name: 'order',
+        uri: '/order',
+        component: () => import('@/views/shop/order/index'),
+        meta: { title: '订单管理', icon: 'el-icon-edit-outline', manage: true },
+      },
+    ],
+  },
   { path: '/', meta: { hideInMenu: true } },
   { path: '*', redirect: '/404', meta: { hideInMenu: true } },
 ];
