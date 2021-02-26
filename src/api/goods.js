@@ -51,3 +51,21 @@ export function getAllGoodsList() {
     method: 'post',
   });
 }
+
+//上架
+export function enSale(data) {
+  return request({
+    url: '/goods/enSale',
+    method: 'post',
+    data,
+  });
+}
+
+//下架
+export function unSale(data) {
+  return request({
+    url: '/goods/unSale',
+    method: 'post',
+    data,
+  });
+}

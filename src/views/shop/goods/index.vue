@@ -10,8 +10,24 @@
       <el-form-item>
         <el-button type="primary" v-if="$route.meta.manage" @click="addOne()">添加</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button type="success" v-if="$route.meta.manage" @click="enSaleGoods()">上架</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="danger" v-if="$route.meta.manage" @click="unSaleGoods()">下架</el-button>
+      </el-form-item>
     </el-form>
-    <el-table stripe v-loading="loading" :data="tableData" row-key="id" default-expand-all border style="width: 100%; margin-bottom: 20px;">
+    <el-table
+      stripe
+      v-loading="loading"
+      :data="tableData"
+      row-key="id"
+      default-expand-all
+      border
+      @selection-change="handleSelectionChange"
+      style="width: 100%; margin-bottom: 20px;"
+    >
+      <el-table-column type="selection" width="35"></el-table-column>
       <el-table-column prop="categoryName" label="商品类型" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="name" label="名称" show-overflow-tooltip width="200"></el-table-column>
       <el-table-column prop="brandName" label="品牌" show-overflow-tooltip width="150"></el-table-column>
@@ -188,7 +204,7 @@
 <script>
 import { mapState } from 'vuex';
 import { getStyle } from '@/utils/common';
-import { deleteById, getList, insert, updateById } from '@/api/goods';
+import { deleteById, getList, insert, updateById, enSale, unSale } from '@/api/goods';
 import { getBrandAllList } from '@/api/brand';
 import { getAttributeCategoryList } from '@/api/attributeCategory';
 import { getList as getCategoryList } from '@/api/category';
@@ -233,6 +249,7 @@ export default {
   components: { UploadImg, WEditor },
   data(props) {
     return {
+      goodsIds: [],
       categoryTreeData: null,
       filterText: '',
       defaultProps: {
@@ -246,6 +263,8 @@ export default {
       saving: false,
       pageParams: {
         name: '',
+        pageNo: 1,
+        pageSize: 10,
       },
       activeName: 'general',
       form: props._.cloneDeep(defaultProps),
@@ -275,6 +294,37 @@ export default {
     },
   },
   methods: {
+    //上架
+    enSaleGoods() {
+      enSale({
+        goodsIds: this.goodsIds.join(','),
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '操作成功',
+        });
+        this.loadData();
+      });
+    },
+    unSaleGoods() {
+      unSale({
+        goodsIds: this.goodsIds.join(','),
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '操作成功',
+        });
+        this.loadData();
+      });
+    },
+    handleSelectionChange(val) {
+      this.goodsIds = [];
+      if (val && val.length > 0) {
+        val.forEach((item) => {
+          this.goodsIds.push(item.id);
+        });
+      }
+    },
     //过滤树形数据
     filterNode(value, data) {
       if (!value) return true;
