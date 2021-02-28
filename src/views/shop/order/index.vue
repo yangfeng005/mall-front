@@ -10,21 +10,8 @@
       <el-form-item>
         <el-button type="primary" v-if="$route.meta.manage" @click="addOne()">添加</el-button>
       </el-form-item>
-      <el-form-item>
-        <el-button type="danger" v-if="$route.meta.manage" @click="unSaleGoods()">发货</el-button>
-      </el-form-item>
     </el-form>
-    <el-table
-      stripe
-      v-loading="loading"
-      :data="tableData"
-      row-key="id"
-      default-expand-all
-      border
-      @selection-change="handleSelectionChange"
-      style="width: 100%; margin-bottom: 20px;"
-    >
-      <el-table-column type="selection" width="35"></el-table-column>
+    <el-table stripe v-loading="loading" :data="tableData" row-key="id" default-expand-all border style="width: 100%; margin-bottom: 20px;">
       <el-table-column prop="orderSn" label="订单号" show-overflow-tooltip width="180"></el-table-column>
       <!--<el-table-column prop="orderType" label="订单类型" show-overflow-tooltip width="100">
           <template slot-scope="scope">
@@ -107,6 +94,7 @@
       <el-table-column label="操作" align="center" :width="!$route.meta.manage ? '150' : '150'">
         <template slot-scope="scope">
           <el-button @click="orderDetail(scope.row)" type="primary" size="mini">详情</el-button>
+          <el-button @click="delivery(scope.row)" type="danger" size="mini">发货</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -231,12 +219,10 @@
               <el-input v-model="form.goodsPrice" />
             </el-form-item>
             <el-form-item label="下单时间">
-              <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="form.addTime"
-                              style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="form.addTime" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item label="付款时间">
-              <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="form.payTime"
-                              style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="form.payTime" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item label="配送费用">
               <el-input v-model="form.freightPrice" />
@@ -248,12 +234,37 @@
         <el-button @click="handleCancel">返回</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      top="5vh"
+      width="35%"
+      :max-height="tableH"
+      :height="tableH"
+      :close-on-click-modal="false"
+      title="发货"
+      :visible.sync="dialogDeliveryVisible"
+      :before-close="handleCancel"
+    >
+      <el-form ref="form" :model="form" :rules="formRules" label-width="110px">
+        <el-form-item label="快递公司" prop="shippingId" required="">
+          <el-select v-model="form.shippingId">
+            <el-option v-for="shipping in shippingList" :value="shipping.id" :key="shipping.id" :label="shipping.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="快递单号" prop="shippingNo" required="">
+          <el-input v-model="form.shippingNo" placeholder="快递单号" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="handleCancel">取 消</el-button>
+        <el-button :loading="saving" type="primary" v-if="$route.meta.manage" @click="deliveryGoods">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex';
 import { getStyle } from '@/utils/common';
-import { getList } from '@/api/order';
+import { getList, sendGoods } from '@/api/order';
 import { getAllShippingList } from '@/api/shipping';
 
 const defaultProps = {
@@ -296,6 +307,7 @@ export default {
   name: 'Order',
   data(props) {
     return {
+      dialogDeliveryVisible: false,
       shippingList: [],
       loading: false,
       saving: false,
@@ -310,7 +322,8 @@ export default {
       tableData: [],
       total: 0,
       formRules: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        shippingId: [{ required: true, message: '请选择快递公司', trigger: 'blur' }],
+        shippingNo: [{ required: true, message: '请输入快递单号', trigger: 'blur' }],
       },
     };
   },
@@ -327,6 +340,29 @@ export default {
     },
   },
   methods: {
+    deliveryGoods() {
+      this.$refs.form.validate((valid) => {
+        if (!valid) return;
+
+        this.saving = true;
+        sendGoods({
+          ...this.form,
+        })
+          .then(() => {
+            this.$message({
+              message: '保存成功',
+              type: 'success',
+            });
+            this.loadData();
+            this.handleCancel();
+          })
+          .finally(() => (this.saving = false));
+      });
+    },
+    delivery(row) {
+      this.form = this._.pick(row, Object.keys(defaultProps));
+      this.dialogDeliveryVisible = true;
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },

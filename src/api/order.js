@@ -51,3 +51,11 @@ export function getAllGoodsList() {
     method: 'post',
   });
 }
+
+export function sendGoods(data) {
+  return request({
+    url: '/order/sendGoods',
+    method: 'post',
+    data,
+  });
+}
