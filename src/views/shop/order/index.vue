@@ -106,7 +106,7 @@
     ></el-pagination>
     <el-dialog
       top="5vh"
-      width="75%"
+      width="60%"
       :max-height="tableH"
       :height="tableH"
       :close-on-click-modal="false"
@@ -225,6 +225,43 @@
               <el-input v-model="form.freightPrice" />
             </el-form-item>
           </el-tab-pane>
+          <el-tab-pane label="订单商品" name="goodInfo">
+            <el-row>
+              <el-col :span="8">
+                <span>单据编号：{{ form.orderSn }}</span>
+                <p>
+                  <span>日期： {{ this.nowDate }}</span>
+                </p>
+                <address>
+                  <strong>{{ form.consignee }}</strong
+                  ><br />
+                  {{ form.address }}<br />
+                  <abbr title="Phone">联系方式：</abbr> {{ form.mobile }}
+                </address>
+                <br />
+              </el-col>
+            </el-row>
+
+            <el-table
+              stripe
+              v-loading="loading"
+              :data="orderGoods"
+              row-key="id"
+              default-expand-all
+              border
+              style="width: 100%; margin-bottom: 20px;"
+            >
+              <el-table-column prop="goodsName" label="清单" show-overflow-tooltip width="400"></el-table-column>
+              <el-table-column prop="number" label="数量" show-overflow-tooltip width="100"></el-table-column>
+              <el-table-column prop="retailPrice" label="单价" width="100" :formatter="format"></el-table-column>
+              <el-table-column label="总价" width="100" :formatter="formatTotal"></el-table-column>
+            </el-table>
+            <el-row>
+              <el-col :span="6" :offset="18">
+                <span>总计：¥{{ this.totalPrice }}</span>
+              </el-col>
+            </el-row>
+          </el-tab-pane>
         </el-tabs>
       </el-form>
       <div slot="footer">
@@ -263,6 +300,8 @@ import { mapState } from 'vuex';
 import { getStyle } from '@/utils/common';
 import { getList, sendGoods } from '@/api/order';
 import { getAllShippingList } from '@/api/shipping';
+import { getList as getOrderGoodsList } from '@/api/orderGoods';
+import { getCurrentDate } from '@/utils/common';
 
 const defaultProps = {
   id: null,
@@ -304,6 +343,9 @@ export default {
   name: 'Order',
   data(props) {
     return {
+      totalPrice: null,
+      nowDate: null,
+      orderGoods: [],
       dialogDeliveryVisible: false,
       shippingList: [],
       loading: false,
@@ -337,6 +379,12 @@ export default {
     },
   },
   methods: {
+    format(row) {
+      return '¥' + row.retailPrice;
+    },
+    formatTotal(row) {
+      return '¥' + row.retailPrice * row.number;
+    },
     deliveryGoods() {
       this.$refs.form.validate((valid) => {
         if (!valid) return;
@@ -360,11 +408,27 @@ export default {
       this.form = this._.pick(row, Object.keys(defaultProps));
       this.dialogDeliveryVisible = true;
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleClick() {
+      console.log();
     },
     orderDetail(row) {
       this.form = this._.pick(row, Object.keys(defaultProps));
+      var searchFrom = {
+        orderId: row.id,
+      };
+      getOrderGoodsList({
+        ...searchFrom,
+      }).then((res) => {
+        this.orderGoods = res.data;
+        if (this.orderGoods && this.orderGoods.length > 0) {
+          let totalPrice = 0;
+          this.orderGoods.forEach((item) => {
+            totalPrice += item.retailPrice * item.number;
+          });
+          this.totalPrice = totalPrice;
+        }
+      });
+      this.nowDate = getCurrentDate(2);
       this.dialogVisible = true;
       this.$nextTick(() => {
         this.$refs.form.clearValidate();
