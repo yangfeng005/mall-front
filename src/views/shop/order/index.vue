@@ -1,14 +1,11 @@
 <template>
   <div>
     <el-form :inline="true" :model="pageParams">
-      <el-form-item label="名称">
-        <el-input clearable v-model="pageParams.name" placeholder="请输入名称"></el-input>
+      <el-form-item label="订单号">
+        <el-input clearable v-model="pageParams.orderSn" placeholder="请输入订单号"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSearch">查询</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" v-if="$route.meta.manage" @click="addOne()">添加</el-button>
       </el-form-item>
     </el-form>
     <el-table stripe v-loading="loading" :data="tableData" row-key="id" default-expand-all border style="width: 100%; margin-bottom: 20px;">
@@ -22,7 +19,7 @@
             </div>
           </template>
       </el-table-column>-->
-      <el-table-column prop="orderStatus" label="订单状态" show-overflow-tooltip width="100">
+      <el-table-column prop="orderStatus" label="订单状态" show-overflow-tooltip width="90">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
             <template v-if="scope.row.orderStatus == '0'">
@@ -52,7 +49,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="shippingStatus" label="发货状态" show-overflow-tooltip width="100">
+      <el-table-column prop="shippingStatus" label="发货状态" show-overflow-tooltip width="90">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
             <template v-if="scope.row.shippingStatus == '0'">
@@ -70,7 +67,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="payStatus" label="付款状态" show-overflow-tooltip width="100">
+      <el-table-column prop="payStatus" label="付款状态" show-overflow-tooltip width="90">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
             <template v-if="scope.row.payStatus == '0'">
@@ -87,10 +84,10 @@
       </el-table-column>
       <el-table-column prop="shippingName" label="快递公司" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="shippingNo" label="快递单号" show-overflow-tooltip width="100"></el-table-column>
-      <el-table-column prop="actualPrice" label="实际支付金额" width="100"></el-table-column>
-      <el-table-column prop="orderPrice" label="订单总价" width="100"></el-table-column>
-      <el-table-column prop="goodsPrice" label="商品总价" width="100"></el-table-column>
-      <el-table-column prop="addTime" label="下单时间" show-overflow-tooltip width="140"></el-table-column>
+      <el-table-column prop="actualPrice" label="实际支付金额" width="80"></el-table-column>
+      <el-table-column prop="orderPrice" label="订单总价" width="80"></el-table-column>
+      <el-table-column prop="goodsPrice" label="商品总价" width="80"></el-table-column>
+      <el-table-column prop="addTime" label="下单时间" show-overflow-tooltip width="130"></el-table-column>
       <el-table-column label="操作" align="center" :width="!$route.meta.manage ? '150' : '150'">
         <template slot-scope="scope">
           <el-button @click="orderDetail(scope.row)" type="primary" size="mini">详情</el-button>
@@ -255,7 +252,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button @click="handleCancel">取 消</el-button>
+        <el-button @click="dialogDeliveryVisible = false">取 消</el-button>
         <el-button :loading="saving" type="primary" v-if="$route.meta.manage" @click="deliveryGoods">确 定</el-button>
       </div>
     </el-dialog>
@@ -312,7 +309,7 @@ export default {
       loading: false,
       saving: false,
       pageParams: {
-        name: '',
+        orderSn: '',
         pageNo: 1,
         pageSize: 10,
       },
@@ -354,7 +351,7 @@ export default {
               type: 'success',
             });
             this.loadData();
-            this.handleCancel();
+            this.dialogDeliveryVisible = false;
           })
           .finally(() => (this.saving = false));
       });
