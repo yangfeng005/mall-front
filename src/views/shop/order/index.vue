@@ -114,9 +114,9 @@
       :visible.sync="dialogVisible"
       :before-close="handleCancel"
     >
-      <el-form ref="form" :model="form" :disabled="true" label-width="110px">
-        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane label="订单信息" name="general">
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tab-pane label="订单信息" name="general">
+          <el-form ref="form" :model="form" :disabled="true" label-width="110px">
             <el-form-item label="订单号">
               <el-input v-model="form.orderSn" />
             </el-form-item>
@@ -224,46 +224,47 @@
             <el-form-item label="配送费用">
               <el-input v-model="form.freightPrice" />
             </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="订单商品" name="goodInfo">
-            <el-row>
-              <el-col :span="8">
-                <span>单据编号：{{ form.orderSn }}</span>
-                <p>
-                  <span>日期： {{ this.nowDate }}</span>
-                </p>
-                <address>
-                  <strong>{{ form.consignee }}</strong
-                  ><br />
-                  {{ form.address }}<br />
-                  <abbr title="Phone">联系方式：</abbr> {{ form.mobile }}
-                </address>
-                <br />
-              </el-col>
-            </el-row>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="订单商品" name="goodInfo">
+          <el-row>
+            <el-col :span="8">
+              <span>单据编号：{{ form.orderSn }}</span>
+              <p>
+                <span>日期： {{ this.nowDate }}</span>
+              </p>
+              <address>
+                <strong>{{ form.consignee }}</strong
+                ><br />
+                {{ form.address }}<br />
+                <abbr title="Phone">联系方式：</abbr> {{ form.mobile }}
+              </address>
+              <br />
+            </el-col>
+          </el-row>
 
-            <el-table
-              stripe
-              v-loading="loading"
-              :data="orderGoods"
-              row-key="id"
-              default-expand-all
-              border
-              style="width: 100%; margin-bottom: 20px;"
-            >
-              <el-table-column prop="goodsName" label="清单" show-overflow-tooltip width="400"></el-table-column>
-              <el-table-column prop="number" label="数量" show-overflow-tooltip width="100"></el-table-column>
-              <el-table-column prop="retailPrice" label="单价" width="100" :formatter="format"></el-table-column>
-              <el-table-column label="总价" width="100" :formatter="formatTotal"></el-table-column>
-            </el-table>
-            <el-row>
-              <el-col :span="6" :offset="18">
-                <span>总计：¥{{ this.totalPrice }}</span>
-              </el-col>
-            </el-row>
-          </el-tab-pane>
-        </el-tabs>
-      </el-form>
+          <el-table
+            stripe
+            v-loading="loading"
+            :data="orderGoods"
+            row-key="id"
+            default-expand-all
+            border
+            style="width: 100%; margin-bottom: 20px;"
+          >
+            <el-table-column prop="goodsName" label="清单" show-overflow-tooltip width="400"></el-table-column>
+            <el-table-column prop="number" label="数量" show-overflow-tooltip width="100"></el-table-column>
+            <el-table-column prop="retailPrice" label="单价" width="100" :formatter="format"></el-table-column>
+            <el-table-column label="总价" width="100" :formatter="formatTotal"></el-table-column>
+          </el-table>
+          <el-row>
+            <el-col :span="6" :offset="18">
+              <span>总计：¥{{ this.totalPrice }}</span>
+            </el-col>
+          </el-row>
+          <el-button type="primary" @click="print"><i class="el-icon-printer"></i>打印</el-button>
+        </el-tab-pane>
+      </el-tabs>
       <div slot="footer">
         <el-button @click="handleCancel">返回</el-button>
       </div>
@@ -379,6 +380,9 @@ export default {
     },
   },
   methods: {
+    print: function () {
+      window.print();
+    },
     format(row) {
       return '¥' + row.retailPrice;
     },
