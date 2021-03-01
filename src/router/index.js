@@ -133,6 +133,31 @@ export const asyncRoutes = [
       },
     ],
   },
+
+  {
+    path: '/banner',
+    name: 'banner',
+    uri: '/banner',
+    component: Layout,
+    meta: { title: 'Banner管理', icon: 'el-icon-edit-outline' },
+    children: [
+      {
+        path: 'adPosition',
+        name: 'adPosition',
+        uri: '/banner/adPosition',
+        component: () => import('@/views/shop/adPosition/index'),
+        meta: { title: '广告位置', manage: true },
+      },
+      {
+        path: 'ad',
+        name: 'ad',
+        uri: '/banner/ad',
+        component: () => import('@/views/shop/ad/index'),
+        meta: { title: '广告列表', manage: true },
+      },
+    ],
+  },
+
   {
     path: '/order',
     name: 'order',
