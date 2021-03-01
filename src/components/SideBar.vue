@@ -12,9 +12,9 @@
       :default-active="$route.path"
     >
       <el-menu-item class="logo">
-        <!-- <i>
-           <img src="../assets/logo.png" />
-         </i>-->
+        <i>
+          <img src="../assets/logo.png" />
+        </i>
         <span slot="title">商城管理系统</span>
       </el-menu-item>
       <sidebar-item :imgs="imgs" v-for="menu in menuList" :key="menu.uri" :item="menu" />

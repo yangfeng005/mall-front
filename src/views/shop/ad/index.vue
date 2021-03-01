@@ -18,7 +18,12 @@
       <el-table-column prop="link" label="链接" show-overflow-tooltip width="250"></el-table-column>
       <el-table-column label="图片" width="80">
         <template slot-scope="scope">
-          <el-avatar v-if="scope.row.imageUrl" shape="square" style="vertical-align: middle;" :src="getFile(scope.row.imageUrl)"></el-avatar>
+          <el-avatar
+            v-if="scope.row.imageUrl"
+            shape="square"
+            style="vertical-align: middle;"
+            :src="getFile(scope.row.imageUrl)"
+          ></el-avatar>
         </template>
       </el-table-column>
       <el-table-column prop="content" label="内容" show-overflow-tooltip width="200"></el-table-column>
