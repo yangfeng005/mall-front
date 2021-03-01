@@ -2,7 +2,7 @@
   <div class="admin-login">
     <el-card shadow="always" class="login-card">
       <h1>
-        <span>管理系统</span>
+        <span>商城管理系统</span>
       </h1>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" size="medium">
         <el-form-item label="用户名" prop="username">

@@ -15,7 +15,7 @@
         <!-- <i>
            <img src="../assets/logo.png" />
          </i>-->
-        <span slot="title">微商城管理系统</span>
+        <span slot="title">商城管理系统</span>
       </el-menu-item>
       <sidebar-item :imgs="imgs" v-for="menu in menuList" :key="menu.uri" :item="menu" />
     </el-menu>

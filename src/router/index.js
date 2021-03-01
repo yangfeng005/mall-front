@@ -145,7 +145,7 @@ export const asyncRoutes = [
         name: 'order',
         uri: '/order',
         component: () => import('@/views/shop/order/index'),
-        meta: { title: '订单管理', icon: 'el-icon-edit-outline', manage: true },
+        meta: { title: '订单管理', icon: 'el-icon-notebook-2', manage: true },
       },
     ],
   },
