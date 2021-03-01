@@ -11,16 +11,7 @@
         <el-button type="primary" v-if="$route.meta.manage" @click="addOne">添加</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      v-loading="loading"
-      ref="multipleTable"
-      :data="tableData"
-      :max-height="tableH"
-      :height="tableH"
-      @selection-change="handleSelectionChange"
-      border
-    >
-      <el-table-column type="selection" width="40"></el-table-column>
+    <el-table v-loading="loading" ref="multipleTable" :data="tableData" :max-height="tableH" :height="tableH" border>
       <el-table-column prop="productName" label="商品" show-overflow-tooltip width="200"></el-table-column>
       <el-table-column prop="specificationName" label="规格" show-overflow-tooltip width="200"></el-table-column>
       <el-table-column prop="value" label="规格说明" width="200"></el-table-column>

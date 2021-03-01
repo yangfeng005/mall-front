@@ -11,14 +11,7 @@
         <el-button type="primary" v-if="$route.meta.manage" @click="addOne">添加</el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      v-loading="loading"
-      ref="multipleTable"
-      :data="tableData"
-      :max-height="tableH"
-      :height="tableH"
-      border
-    >
+    <el-table v-loading="loading" ref="multipleTable" :data="tableData" :max-height="tableH" :height="tableH" border>
       <el-table-column prop="username" label="会员名称" show-overflow-tooltip width="120"></el-table-column>
       <el-table-column label="性别" width="50">
         <template slot-scope="scope">
