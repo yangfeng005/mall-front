@@ -175,17 +175,17 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: '/wxuser',
-    name: 'wxuser',
-    uri: '/wxuser',
+    path: '/wxUser',
+    name: 'wxUser',
+    uri: '/wxUser',
     component: Layout,
     meta: { hideInMenu: true, title: '会员管理' },
     children: [
       {
         path: '/',
-        name: 'wxuser',
-        uri: '/wxuser',
-        component: () => import('@/views/shop/wxuser/index'),
+        name: 'wxUser',
+        uri: '/wxUser',
+        component: () => import('@/views/shop/wxUser/index'),
         meta: { manage: true },
       },
     ],
