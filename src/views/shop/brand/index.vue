@@ -103,6 +103,12 @@
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="新品牌图片">
+          <upload-img :avatarUrl="form.newPicUrl" @changeUrl="(url) => (form.newPicUrl = url)" />
+        </el-form-item>
+        <el-form-item label="新品牌排序">
+          <el-input-number v-model="form.newSortOrder" :min="1" controls-position="right"></el-input-number>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button @click="handleCancel">取 消</el-button>
@@ -125,8 +131,11 @@ const defaultProps = {
   simpleDesc: '',
   sortOrder: null,
   isShow: null,
+  floorPrice: null,
   appListPicUrl: '',
   isNew: null,
+  newPicUrl: '',
+  newSortOrder: null,
 };
 
 export default {
