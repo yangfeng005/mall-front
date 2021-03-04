@@ -158,6 +158,25 @@
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="详细描述" name="detail">
+            <el-tag size="small">商品轮播图</el-tag>
+            <el-divider></el-divider>
+            <template>
+              <el-upload
+                :action="`${BASE_URL}/file/upload`"
+                list-type="picture-card"
+                :file-list="goodsGalleryList"
+                :on-preview="handleView"
+                :on-success="handleSuccess"
+                :before-upload="handleBeforeUpload"
+                :on-remove="handleRemove"
+                accept=".jpg,.jpeg,.png,.gif,.JPG,.JPEG"
+              >
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogImgVisible">
+                <img width="100%" :src="dialogImageUrl" alt="" />
+              </el-dialog>
+            </template>
             <w-editor v-if="dialogVisible" :value="form.goodsDesc" @onChange="(v) => (form.goodsDesc = v)"></w-editor>
           </el-tab-pane>
           <el-tab-pane label="其他信息" name="otherInfo">
@@ -208,6 +227,7 @@ import { deleteById, getList, insert, updateById, enSale, unSale } from '@/api/g
 import { getBrandAllList } from '@/api/brand';
 import { getAttributeCategoryList } from '@/api/attributeCategory';
 import { getList as getCategoryList } from '@/api/category';
+import { getGoodsGalleryList } from '@/api/goodsGallery';
 import UploadImg from '@/components/Upload';
 import WEditor from '@/components/WEditor';
 
@@ -249,6 +269,9 @@ export default {
   components: { UploadImg, WEditor },
   data(props) {
     return {
+      dialogImageUrl: '',
+      dialogImgVisible: false,
+      goodsGalleryList: [],
       goodsIds: [],
       categoryTreeData: null,
       filterText: '',
@@ -294,6 +317,30 @@ export default {
     },
   },
   methods: {
+    handleView(name) {
+      this.imgName = name;
+      this.visible = true;
+    },
+    handleRemove(file) {
+      // 从 upload 实例删除数据
+      const fileList = this.goodsGalleryList;
+      this.goodsGalleryList.splice(fileList.indexOf(file), 1);
+    },
+    handleSuccess(res, file) {
+      // 因为上传过程为实例，这里模拟添加 url
+      file.url = this.getFile(res.data.id);
+      this.goodsGalleryList.push(file);
+    },
+    handleBeforeUpload() {
+      const check = this.goodsGalleryList.length < 4;
+      if (!check) {
+        this.$notify.warning({
+          title: '最多只能上传 4 张图片。',
+        });
+      }
+      return check;
+    },
+
     //上架
     enSaleGoods() {
       enSale({
@@ -386,6 +433,13 @@ export default {
         if (!valid) return;
 
         this.saving = true;
+        if (this.goodsGalleryList && this.goodsGalleryList.length > 0) {
+          let imgIds = [];
+          this.goodsGalleryList.forEach((item) => {
+            imgIds.push(item.url.split('=')[1]);
+          });
+          this.form.galleryImgIds = imgIds;
+        }
 
         if (this.form && this.form.id) {
           updateById(JSON.stringify(this.form))
@@ -416,6 +470,23 @@ export default {
     },
     updateOne(row) {
       this.form = this._.pick(row, Object.keys(defaultProps));
+      let params = {
+        goodsId: row.id,
+      };
+      let that = this;
+      this.goodsGalleryList = [];
+      getGoodsGalleryList(params).then((res) => {
+        if (res.data && res.data.length > 0) {
+          let goodsGalleryList = [];
+          res.data.forEach((item) => {
+            let gallery = {
+              url: that.getFile(item.imgUrl),
+            };
+            goodsGalleryList.push(gallery);
+          });
+          this.goodsGalleryList = goodsGalleryList;
+        }
+      });
       this.dialogVisible = true;
       this.$nextTick(() => {
         this.$refs.form.clearValidate();
