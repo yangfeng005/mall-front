@@ -2,7 +2,7 @@
   <div>
     <el-form :inline="true" :model="pageParams">
       <el-form-item label="商品名称">
-        <el-input clearable v-model="pageParams.productName" placeholder="请输入名称"></el-input>
+        <el-input clearable v-model="pageParams.goodsName" placeholder="请输入名称"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSearch">查询</el-button>
@@ -12,7 +12,7 @@
       </el-form-item>
     </el-form>
     <el-table stripe v-loading="loading" :data="tableData" row-key="id" default-expand-all border style="width: 100%; margin-bottom: 20px;">
-      <el-table-column prop="productName" label="商品名称" show-overflow-tooltip width="200"></el-table-column>
+      <el-table-column prop="goodsName" label="商品名称" show-overflow-tooltip width="200"></el-table-column>
       <el-table-column prop="goodsSpecificationName" label="商品规格" show-overflow-tooltip width="200"></el-table-column>
       <el-table-column prop="goodsSn" label="商品序列号" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="goodsNumber" label="商品库存" show-overflow-tooltip width="100"></el-table-column>
@@ -101,7 +101,7 @@ const defaultProps = {
   marketPrice: '',
   goodsSpecificationIds: '',
   goodsSpecificationIdList: [],
-  productName: '',
+  goodsName: '',
   goodsSpecificationName: '',
 };
 
@@ -118,7 +118,7 @@ export default {
       loading: false,
       saving: false,
       pageParams: {
-        productName: '',
+        goodsName: '',
       },
       form: props._.cloneDeep(defaultProps),
       dialogVisible: false,
