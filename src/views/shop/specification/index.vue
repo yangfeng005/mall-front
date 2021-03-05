@@ -47,7 +47,7 @@
           <el-input v-model="form.name" placeholder="请输入规格名称" maxlength="64"></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="name">
-          <el-input v-model="form.sortOrder" placeholder="请输入规格名称" maxlength="64"></el-input>
+          <el-input-number v-model="form.sortOrder" :min="1" controls-position="right"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer">

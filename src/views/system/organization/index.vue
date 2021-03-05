@@ -73,7 +73,7 @@
           <el-switch v-model="form.status" active-value="1" inactive-value="2"></el-switch>
         </el-form-item>
         <el-form-item label="排序" prop="rank">
-          <el-input-number v-model="form.rank" :min="1" controls-position="right" placeholder="请排序"></el-input-number>
+          <el-input-number v-model="form.rank" :min="1" controls-position="right"></el-input-number>
           <small>排序规则为：从小到大</small>
         </el-form-item>
       </el-form>
