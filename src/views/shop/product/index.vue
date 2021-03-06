@@ -178,6 +178,7 @@ export default {
       }
       this.goodsSpecificationMap = {};
       if (!val || val.length == 0) {
+        this.goodsSpecificationSelected={}
         return;
       }
       //对比是否是选中的规格，没有选中的规格则从选中的map中移除
@@ -240,10 +241,14 @@ export default {
         if (!valid) return;
 
         this.saving = true;
-        if (this.goodsSpecificationSelected) {
+        this.form.goodsSpecificationIds=''
+        if (this.specificationList && this.goodsSpecificationSelected) {
           var goodsSpecificationIds = [];
-          for (var key in this.goodsSpecificationSelected) {
-            goodsSpecificationIds.push(this.goodsSpecificationSelected[key]);
+          for (var item of this.specificationList) {
+            let checkItem= this.goodsSpecificationSelected[item.id]
+            if(checkItem){
+              goodsSpecificationIds.push(checkItem);
+            }
           }
           if (goodsSpecificationIds && goodsSpecificationIds.length > 0) {
             this.form.goodsSpecificationIds = goodsSpecificationIds.join('_');
@@ -277,21 +282,26 @@ export default {
       });
     },
     updateOne(row) {
+      console.log(this.specificationList)
       this.form = this._.pick(row, Object.keys(defaultProps));
       this.goodsSpecificationSelected = {};
-      var goodsSpecificationIdArr = this.form.goodsSpecificationIds.split('_');
-      if (this.form.goodsSpecificationIdList && goodsSpecificationIdArr) {
-        for (var i = 0; i < this.form.goodsSpecificationIdList.length; i++) {
-          this.goodsSpecificationSelected[this.form.goodsSpecificationIdList[i]] = goodsSpecificationIdArr[i];
+      if(this.form.goodsSpecificationIds){
+        var goodsSpecificationIdArr = this.form.goodsSpecificationIds.split('_');
+        if (goodsSpecificationIdArr) {
+          for (var i = 0; i < this.form.goodsSpecificationIdList.length; i++) {
+            this.goodsSpecificationSelected[this.form.goodsSpecificationIdList[i]] = goodsSpecificationIdArr[i];
+          }
         }
       }
-      this.goodsSpecificationMap = new Object();
+      this.goodsSpecificationMap = {};
       let data = {
         goodsId: row.goodsId,
       };
       listGoodsSpecification(data).then((res) => {
         this.specificationMap = res.data;
-        this.showSpecification(this.form.goodsSpecificationIdList);
+        if(this.form.goodsSpecificationIdList && this.form.goodsSpecificationIdList.length>0){
+          this.showSpecification(this.form.goodsSpecificationIdList);
+        }
       });
       this.dialogVisible = true;
       this.$nextTick(() => {
