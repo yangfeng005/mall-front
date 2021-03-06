@@ -99,8 +99,8 @@ const defaultProps = {
   goodsNumber: '',
   retailPrice: '',
   marketPrice: '',
-  goodsSpecificationIds: '',
-  goodsSpecificationIdList: [],
+  goodsSpecificationIds: '', //商品规格id
+  goodsSpecificationIdList: [], //规格id
   goodsName: '',
   goodsSpecificationName: '',
 };
@@ -178,7 +178,7 @@ export default {
       }
       this.goodsSpecificationMap = {};
       if (!val || val.length == 0) {
-        this.goodsSpecificationSelected={}
+        this.goodsSpecificationSelected = {};
         return;
       }
       //对比是否是选中的规格，没有选中的规格则从选中的map中移除
@@ -241,12 +241,12 @@ export default {
         if (!valid) return;
 
         this.saving = true;
-        this.form.goodsSpecificationIds=''
+        this.form.goodsSpecificationIds = '';
         if (this.specificationList && this.goodsSpecificationSelected) {
           var goodsSpecificationIds = [];
           for (var item of this.specificationList) {
-            let checkItem= this.goodsSpecificationSelected[item.id]
-            if(checkItem){
+            let checkItem = this.goodsSpecificationSelected[item.id];
+            if (checkItem) {
               goodsSpecificationIds.push(checkItem);
             }
           }
@@ -282,10 +282,13 @@ export default {
       });
     },
     updateOne(row) {
-      console.log(this.specificationList)
       this.form = this._.pick(row, Object.keys(defaultProps));
+      if (!this.form.goodsSpecificationIdList) {
+        this.form.goodsSpecificationIdList = [];
+      }
       this.goodsSpecificationSelected = {};
-      if(this.form.goodsSpecificationIds){
+      //规格id对应商品规格id
+      if (this.form.goodsSpecificationIds) {
         var goodsSpecificationIdArr = this.form.goodsSpecificationIds.split('_');
         if (goodsSpecificationIdArr) {
           for (var i = 0; i < this.form.goodsSpecificationIdList.length; i++) {
@@ -299,7 +302,7 @@ export default {
       };
       listGoodsSpecification(data).then((res) => {
         this.specificationMap = res.data;
-        if(this.form.goodsSpecificationIdList && this.form.goodsSpecificationIdList.length>0){
+        if (this.form.goodsSpecificationIdList && this.form.goodsSpecificationIdList.length > 0) {
           this.showSpecification(this.form.goodsSpecificationIdList);
         }
       });
