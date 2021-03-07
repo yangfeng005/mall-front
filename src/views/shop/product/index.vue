@@ -96,7 +96,7 @@ const defaultProps = {
   id: null,
   goodsId: '',
   goodsSn: '',
-  goodsNumber: '',
+  goodsNumber: null,
   retailPrice: '',
   marketPrice: '',
   goodsSpecificationIds: '', //商品规格id
