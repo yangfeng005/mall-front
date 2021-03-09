@@ -14,7 +14,7 @@
         <el-button type="primary" v-if="$route.meta.manage" @click="addOne()">添加</el-button>
       </el-form-item>
     </el-form>
-    <el-table stripe v-loading="loading" :data="tableData" row-key="id" default-expand-all border style="width: 100%; margin-bottom: 20px;">
+    <el-table stripe v-loading="loading" :data="tableData" row-key="id" border style="width: 100%; margin-bottom: 20px;">
       <el-table-column prop="name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="code" label="分类编码" width="150"></el-table-column>
       <el-table-column prop="frontDesc" label="描述" show-overflow-tooltip width="250"></el-table-column>

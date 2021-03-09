@@ -101,7 +101,6 @@
               <el-tree
                 :data="categoryTreeData"
                 node-key="id"
-                default-expand-all
                 ref="categoryTree"
                 :filter-node-method="filterNode"
                 :props="defaultProps"
