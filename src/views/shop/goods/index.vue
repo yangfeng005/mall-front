@@ -98,13 +98,7 @@
         <el-card class="box-card">
           <div class="text item">
             <ul class="infinite-list" style="height: 300px; overflow: auto;">
-              <el-tree
-                :data="categoryTreeData"
-                node-key="id"
-                ref="categoryTree"
-                :filter-node-method="filterNode"
-                :props="defaultProps"
-              >
+              <el-tree :data="categoryTreeData" node-key="id" ref="categoryTree" :filter-node-method="filterNode" :props="defaultProps">
               </el-tree>
             </ul>
           </div>
